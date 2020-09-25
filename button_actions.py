@@ -1,15 +1,17 @@
+import ctypes
 import random
 import time
 import winsound
 
 import autoit
-import cv2
+import cv2 as cv2
 import keyboard
 import numpy as np
 import pyautogui
-from win32api import GetSystemMetrics
 
 from utils.current_images import current_image
+
+user32 = ctypes.windll.user32
 
 bool_dictionary = {
     'Auto Attack': False,
@@ -38,8 +40,8 @@ minimap_area = dict(
 chat_area = dict(
     left=0,
     top=0,
-    width=int(GetSystemMetrics(0)),
-    height=int(GetSystemMetrics(0)))
+    width=int(user32.GetSystemMetrics(0)),
+    height=int(user32.GetSystemMetrics(0)))
 
 health_info_area = [0, 0]
 
@@ -76,10 +78,11 @@ def train_ki(percent_mana):
 
 def antikick():
     while bool_dictionary['Antikick']:
-        autoit.send('{UP}')
-        time.sleep(0.3)
-        autoit.send('{DOWN}')
-        time.sleep(random.randint(600, 900))
+        pyautogui.keyDown('ctrl')
+        pyautogui.press('right')
+        pyautogui.press('left')
+        pyautogui.keyUp('ctrl')
+        time.sleep(random.randint(500, 700))
         if not bool_dictionary['Antikick']:
             break
 
@@ -99,10 +102,10 @@ def cavebot():
             monsters_dictionary["attacked"] = 0
         if len(template_loc[0]) != 0 and monsters_dictionary["available"] == 0 \
                 and monsters_dictionary["attacked"] == 0:
-            x_mouse, y_mouse = autoit.mouse_get_pos()
-            autoit.mouse_click('left', template_loc[1][0] + minimap_area['left'],
-                               template_loc[0][0] + 2 + minimap_area['top'], 1, 0)
-            autoit.mouse_move(x_mouse, y_mouse, 0)
+            x_mouse, y_mouse = pyautogui.position()
+            pyautogui.moveTo(template_loc[1][0] + minimap_area['left'], template_loc[0][0] + 2 + minimap_area['top'], 0)
+            pyautogui.click()
+            pyautogui.moveTo(x_mouse, y_mouse, 0)
             time.sleep(2)
         elif len(template_loc[0]) == 0 and monsters_dictionary["available"] == 0 \
                 and monsters_dictionary["attacked"] == 0:
@@ -120,7 +123,7 @@ def spell_or_heal(percent_hp):
     while bool_dictionary['Cast spell or Heal']:
         heal = check_hp(percent_hp, health_info_area)
         if heal == 'I\'m fine..':
-            autoit.send('{F1}')
+            pyautogui.press('f1')
         if not bool_dictionary['Cast spell or Heal']:
             break
 
@@ -151,10 +154,11 @@ def find_monster(monster):
     loc_marked = np.where(template_marked >= threshold)
     # print(loc_unmarked[0], loc_unmarked[1])
     if len(loc_unmarked[0]) != 0 and len(loc_marked[0]) == 0:
-        x_mouse, y_mouse = autoit.mouse_get_pos()
-        autoit.mouse_click('left', loc_unmarked[1][0] + battle_list_area['left'],
-                           loc_unmarked[0][0] + battle_list_area['top'] + 15, 1, 0)
-        autoit.mouse_move(x_mouse, y_mouse, 0)
+        x_mouse, y_mouse = pyautogui.position()
+        pyautogui.moveTo(loc_unmarked[1][0] + battle_list_area['left'],
+                        loc_unmarked[0][0] + battle_list_area['top'] + 15, 0)
+        pyautogui.click()
+        pyautogui.moveTo(x_mouse, y_mouse, 0)
     monsters_dictionary['available'] = len(loc_unmarked[0])
     monsters_dictionary['attacked'] = len(loc_marked[0])
 
@@ -163,12 +167,12 @@ def check_hp(percent_hp, health_info):
     start_bar_x, start_bar_y = health_info[0:2]
     start_bar_x = int(start_bar_x + 4)
     start_bar_y = int(start_bar_y + 20)
-
     heal = autoit.pixel_get_color(int(start_bar_x + (int(percent_hp) / 100 * 181)), start_bar_y)
+
     # print(f'Heal percent:{percent_hp}, heal color: {heal}')
     time.sleep(random.uniform(0.2, 0.3))
     if heal != 4521796:
-        autoit.send('{f3}')
+        pyautogui.press('f3')
         return 'Heal me!'
     else:
         return 'I\'m fine..'
@@ -183,11 +187,11 @@ def check_mana(percent_mana, health_info, title='None'):
     # print(f'Mana percent:{percent_mana}, mana color: {mana}')
     if title == 'senzu':
         if mana != 4474111:
-            autoit.send('{f11}')
+            pyautogui.press('f11')
             time.sleep(random.uniform(2.0, 2.1))
     else:
         if mana == 4474111:
-            autoit.send('{f12}')
+            pyautogui.press('f12')
             time.sleep(random.uniform(0.4, 0.5))
 
 
@@ -234,7 +238,7 @@ def battle_list_area_func():
             chat_area['left'] = int(chat_info[0]) - 6
             chat_area['top'] = int(chat_info[1])
             chat_area['width'] = int(chat_end_info[0] + chat_end_info[3] - chat_info[0])
-            chat_area['height'] = int(GetSystemMetrics(1) - chat_info[1])
+            chat_area['height'] = int(user32.GetSystemMetrics(1) - chat_info[1])
 
 
 ########################################################################################################
@@ -243,6 +247,6 @@ def window_resolution_backup():
     window_resolution = dict(
         left=0,
         top=0,
-        width=GetSystemMetrics(0),
-        height=GetSystemMetrics(1))
+        width=user32.GetSystemMetrics(0),
+        height=user32.GetSystemMetrics(1))
     return window_resolution
