@@ -7,14 +7,14 @@ This script is able to attack monsters, recover heal and mana, running on a map,
 To run this script you have to run 'main_app.py'.
 
 #### 1. Auto Attack:
-![Screenshot](README_images/auto_attack.png)
+![Screenshot](README_images/Auto_attack.png)
 
 * On the right we are able to write monster name. After pressing the button, program start searching given monster.
 
 * Searching monster have to be in monsters folder (2 images: unmarked and marked) e.g. ![Screenshot](monsters/wolf_unmarked.png), ![Screenshot](monsters/wolf_marked.png). Otherwise Auto Attack won't work.
 
 #### 2. Auto Heal and Auto Senzu
-![Screenshot](README_images/auto_heal.png)
+![Screenshot](README_images/Auto_heal.png)
 
 * On the right we are able to write number of Health Percent and Mana Percent from 0 to 100. After pressing the button, program start healing or using senzu if is below given percent number.
 
