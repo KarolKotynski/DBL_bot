@@ -65,7 +65,7 @@ Casting spell is under F1 hotkey!
 #### 7. MSGcheck
 ![Screenshot](README_images/MSGcheck.png)
 
-* Searching ![Screenshot](README_images/MSGcheck_search.png)
+* Searching ![Screenshot](README_images/msgcheck_search.png)
 
 
 
