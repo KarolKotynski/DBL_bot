@@ -1,6 +1,4 @@
-import tkinter as tk
-
-from buttons import MainWindow
+from buttons import *
 
 
 def main():
